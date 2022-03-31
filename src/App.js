@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { Link, Route, Switch } from "react-router-dom";
+import Header from "./components/header";
+import PrivateRoute from "./components/private-route";
+import routes from "./routing/routing-config";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+      <nav>
+        <ul>
+          {routes.map((route) => {
+            const { id, path, name } = route;
+            if (path === "/login") return;
+            return (
+              <li key={id}>
+                <Link to={path}>{name}</Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+      <Switch>
+        {routes.map((route) => {
+          const { id, isPrivate, ...others } = route;
+          return isPrivate ? (
+            <PrivateRoute key={id} {...others} />
+          ) : (
+            <Route key={id} {...others} />
+          );
+        })}
+      </Switch>
+    </>
   );
 }
 
